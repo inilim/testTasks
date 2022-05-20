@@ -1,8 +1,17 @@
 <?php
-function createMx (int $m, int $n)
+Class Counter
+{
+   static $operations = [
+      'activation' => 0,
+      'overload' => 0,
+      'isolation' => 0,
+      'extinction' => 0,
+   ];
+}
+# создаем матрицу со случайными состояниями
+function createMx (int $m, int $n):array
 {
    $mn = [];
-   $print = '';
    foreach(range(1,$m) as $r)
    {
       foreach(range(1,$n) as $c)
@@ -10,23 +19,18 @@ function createMx (int $m, int $n)
          # 0 Мертвая - 1 Активная
          $mn[$r][$c] = mt_rand(0,1);
       }
-      $print .= implode(' ', $mn[$r]) . PHP_EOL;
    }
-   print_r($print);
-   echo '------------------' . PHP_EOL;
    return $mn;
 }
-function createDeathMx (int $m, int $n)
+function viewPrint (array $mx):string
 {
-   $mn = [];
-   foreach(range(1,$m) as $r)
+   $str = '';
+   foreach($mx as $r)
    {
-      foreach(range(1,$n) as $c)
-      {
-         $mn[$r][$c] = 0;
-      }
+      $str .= implode(' ', $r) . PHP_EOL;
    }
-   return $mn;
+   $str .= '------------------' . PHP_EOL;
+   return $str;
 }
 # активация
 function activation (array $c, array &$mx)
@@ -41,6 +45,7 @@ function activation (array $c, array &$mx)
    # мертвая клетка, у которой ровно три активных соседа, становится активной в следующем состоянии поля
    if($activeNeighbors === 3)
    {
+      Counter::$operations['activation']++;
       $mx[$c['rows']][$c['col']] = 1;
    }
 }
@@ -57,6 +62,7 @@ function overload (array $c, array &$mx)
    # активная клетка, у которой активных соседей четыре или больше, «умрет» в следующем состоянии поля
    if($activeNeighbors >= 4)
    {
+      Counter::$operations['overload']++;
       $mx[$c['rows']][$c['col']] = 0;
    }
 }
@@ -73,6 +79,7 @@ function isolation (array $c, array &$mx)
    # Активная клетка, у которой активных соседей один или меньше, «умрет» в следующем состоянии поля.
    if($activeNeighbors <= 1)
    {
+      Counter::$operations['isolation']++;
       $mx[$c['rows']][$c['col']] = 0;
    }
 }
@@ -89,6 +96,7 @@ function extinction (array $c, array &$mx)
    # Активная клетка останется такой, только если у неё ровно 2 или 3 активных соседа, иначе «умрет» в следующем состоянии поля
    if( !($activeNeighbors === 2 || $activeNeighbors === 3) )
    {
+      Counter::$operations['extinction']++;
       $mx[$c['rows']][$c['col']] = 0;
    }
 }
@@ -116,15 +124,15 @@ function defineNeighbors (int $r, int $c, array $mx):array
    return $res;
 }
 # выбрать случайную клетку для операции
-function randomCell (array $mx)
+function randomCell (array $mx):array
 {
    return [
       'rows' => mt_rand(1, sizeof($mx)),
       'col' => mt_rand(1, sizeof(current($mx))),
    ];
 }
-# последовательно берем клетку для операции
-function counterCell (?array $current, int $mrows, int $mcol)
+# последовательно берем клетки для операции
+function counterCell (?array $current, int $mrows, int $mcol):array
 {
    if($current === null)
    {
@@ -132,7 +140,6 @@ function counterCell (?array $current, int $mrows, int $mcol)
          'rows' => 1,
          'col' => 1,
       ];
-      print_r($current);
       return $current;
    }
    if($current['col'] === $mcol)
@@ -147,22 +154,35 @@ function counterCell (?array $current, int $mrows, int $mcol)
    {
       $current['col']++;
    }
-   print_r($current);
+
+   if($current['rows'] === $mrows && $current['col'] === $mcol)
+   {
+      $current = [
+         'rows' => 1,
+         'col' => 1,
+      ];
+   }
    return $current;
 }
 
-$rows = 5;
-$col = 5;
+$rows = 15;
+$col = 15;
+
+$cntCell = $rows * $col;
 
 $mx = createMx($rows,$col);
-$dmx = createDeathMx($rows,$col);
-$tick = 0;
 
+print_r(viewPrint($mx));
+
+$tick = 0;
+$noChange = 0;
+$cntChange = 0;
+$dblMx = $mx;
 
 while(1)
 {
    $tick++;
-
+   
    $c = counterCell($c ?? null, $rows, $col);
    #$c = randomCell($mx);
    activation($c, $mx);
@@ -179,10 +199,29 @@ while(1)
    #$c = randomCell($mx);
    extinction($c, $mx);
 
-   if($dmx === $mx) break;
+   #print_r(Counter::$operations);
 
+   #exit();
+
+   if($dblMx === $mx)
+   {
+      $noChange++;
+      if($noChange === $cntCell)
+      {
+         echo 'Клетки не активны. Без изменений.' . PHP_EOL;
+         break;
+      }
+   }
+   else
+   {
+      $dblMx = $mx;
+      $cntChange++;
+      $noChange = 0;
+   }
 }
 
 
 echo 'Количество итераций: ' . $tick . PHP_EOL;
-#print_r($deathMx);
+echo 'Изменений: ' . $cntChange . PHP_EOL;
+print_r(viewPrint($mx));
+print_r(Counter::$operations);
