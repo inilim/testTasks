@@ -1,0 +1,37 @@
+{% extends 'base.twig' %}
+{%- if data|length == 0 -%}
+	{% set data = {'title': 'Добавить новость'} %}
+{%- endif -%}
+{%- block body -%}
+  <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+    <header class="masthead mb-auto">
+      <div class="inner">
+        <h3 class="masthead-brand">Cover</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link" href="/create">Add</a>
+        </nav>
+      </div>
+    </header>
+
+    <main role="main" class="inner cover">
+      <h1 class="cover-heading">{{data.title}}</h1>
+      <form method="post">
+         <label for="title">Заголовок</label><br>
+         <input class="form-control" type="text" name="title" required><br>
+         <label for="preview">Анонс</label><br>
+         <input class="form-control" type="text" name="preview"><br>
+         <label for="text">Содержимое</label><br>
+         <textarea class="form-control" name="text"></textarea><br>
+         <label for="tags">Теги</label><br>
+         <input class="form-control" type="text" name="tags"><br>
+         <input class="btn btn-primary btn-lg btn-block" type="submit" name="submit">
+      </form>
+    </main>
+
+    <footer class="mastfoot mt-auto">
+      <div class="inner">
+        <p></p>
+      </div>
+    </footer>
+  </div>
+{%- endblock -%}

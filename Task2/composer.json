@@ -1,0 +1,7 @@
+{
+    "require": {
+        "twig/twig": "^3.0",
+        "bramus/router": "~1.6",
+        "envms/fluentpdo": "^2.2.0"
+    }
+}

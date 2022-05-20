@@ -1,0 +1,29 @@
+{% extends 'base.twig' %}
+{%- if data|length == 0 -%}
+	{% set data = {'title': 'Новость не найдена'} %}
+{%- endif -%}
+{%- block body -%}
+  <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+    <header class="masthead mb-auto">
+      <div class="inner">
+        <h3 class="masthead-brand">Cover</h3>
+        <nav class="nav nav-masthead justify-content-center">
+          <a class="nav-link" href="/create">Add</a>
+        </nav>
+      </div>
+    </header>
+
+    <main role="main" class="inner cover">
+      <h1 class="cover-heading">{{data.title}}</h1>
+      <p class="lead">{{data.text}}</p>
+      <p><a href="/delete/id/{{data.id}}">Удалить новость</a></p>
+    </main>
+  <p>Publishing: {{data.datePublishing}}</p>
+
+    <footer class="mastfoot mt-auto">
+      <div class="inner">
+        <p>Tags: {{data.tags}}</p>
+      </div>
+    </footer>
+  </div>
+{%- endblock -%}

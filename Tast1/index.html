@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+   <head>
+      <title>Погода и курс валют</title>
+      <link rel="stylesheet" href="src/style.css" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+      <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+      <script src="src/handler.js"></script>
+   </head>
+   <body>
+      <div class="conteiner">
+         <div class="block">
+            <div class="pogoda">
+               <div class="line">
+                  <div class="city">Москва</div>
+                  <div class="date">?</div>
+               </div>
+               <div class="line">
+                  <div class="title">Температура</div>
+                  <div class="temp_static">?</div>
+               </div>
+               <div class="line">
+                  <div class="title">Ощущается как</div>
+                  <div class="temp">?</div>
+               </div>
+               <div class="msg">?</div>
+            </div>
+            <div class="update" title="обновления информации">
+               <img src="src/up.svg" alt=""/>
+               <img src="src/bottom.svg" alt=""/>
+            </div>
+         </div>
+
+         
+         <div class="block">
+            <div id="USD" class="currency">
+               <div class="change"></div>
+               <div class="name"></div>
+            </div>
+            <div id="EUR" class="currency">
+               <div class="change"></div>
+               <div class="name"></div>
+            </div>
+            <div id="SEK" class="currency">
+               <div class="change"></div>
+               <div class="name"></div>
+            </div>
+            <div id="JPY" class="currency">
+               <div class="change"></div>
+               <div class="name"></div>
+            </div>
+            <div id="CAD" class="currency">
+               <div class="change"></div>
+               <div class="name"></div>
+            </div>
+         </div>
+      </div>
+   </body>
+</html>
