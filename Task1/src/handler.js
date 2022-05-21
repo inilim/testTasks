@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", function()
    function getCurrency ()
    {
       return new Promise(function(resolve) {
+         //ajaxGet('https://www.cbr.ru/scripts/XML_daily.asp')
          ajaxGet('https://www.cbr-xml-daily.ru/daily_json.js')
          .then(function(data)
          {
