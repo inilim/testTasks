@@ -33,7 +33,7 @@ function viewPrint (array $mx):string
    return $str;
 }
 # активация
-function activation (array $c, array &$mx)
+function activation (array $c, array &$mx):void
 {
    # Только мертвая клетка
    if($mx[$c['rows']][$c['col']] === 1)
@@ -50,7 +50,7 @@ function activation (array $c, array &$mx)
    }
 }
 # перезагрузка
-function overload (array $c, array &$mx)
+function overload (array $c, array &$mx):void
 {
    # Только живая клетка
    if($mx[$c['rows']][$c['col']] === 0)
@@ -67,7 +67,7 @@ function overload (array $c, array &$mx)
    }
 }
 # изоляция
-function isolation (array $c, array &$mx)
+function isolation (array $c, array &$mx):void
 {
    # Только живая клетка
    if($mx[$c['rows']][$c['col']] === 0)
@@ -84,7 +84,7 @@ function isolation (array $c, array &$mx)
    }
 }
 # вымирание
-function extinction (array $c, array &$mx)
+function extinction (array $c, array &$mx):void
 {
    # Только живая клетка
    if($mx[$c['rows']][$c['col']] === 0)
@@ -122,14 +122,6 @@ function defineNeighbors (int $r, int $c, array $mx):array
       }
    }
    return $res;
-}
-# выбрать случайную клетку для операции
-function randomCell (array $mx):array
-{
-   return [
-      'rows' => mt_rand(1, sizeof($mx)),
-      'col' => mt_rand(1, sizeof(current($mx))),
-   ];
 }
 # последовательно берем клетки для операции
 function counterCell (?array $current, int $mrows, int $mcol):array
@@ -184,31 +176,23 @@ while(1)
    $tick++;
    
    $c = counterCell($c ?? null, $rows, $col);
-   #$c = randomCell($mx);
    activation($c, $mx);
 
    $c = counterCell($c, $rows, $col);
-   #$c = randomCell($mx);
    overload($c, $mx);
 
    $c = counterCell($c, $rows, $col);
-   #$c = randomCell($mx);
    isolation($c, $mx);
 
    $c = counterCell($c, $rows, $col);
-   #$c = randomCell($mx);
    extinction($c, $mx);
-
-   #print_r(Counter::$operations);
-
-   #exit();
 
    if($dblMx === $mx)
    {
       $noChange++;
       if($noChange === $cntCell)
       {
-         echo 'Клетки не активны. Без изменений.' . PHP_EOL;
+         echo 'Клетки более не изменны.' . PHP_EOL;
          break;
       }
    }
